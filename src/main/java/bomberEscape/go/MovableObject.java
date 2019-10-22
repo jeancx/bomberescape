@@ -8,10 +8,10 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class MovableObject extends GameObject {
 
-	protected Position	last;
-	protected Position	position;
-	protected Direction	direction	= Direction.N;
-	protected int		speed		= 1;
+	public Position	last;
+	public Position	position;
+	public Direction	direction	= Direction.N;
+	public int		speed		= 1;
 
 	public MovableObject(double x, double y, double width, double height, Color color) {
 		position = new Position((int) x, (int) y);

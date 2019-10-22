@@ -2,14 +2,19 @@ package bomberEscape;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+import jade.*;
 import java.io.File;
 import java.util.Objects;
 
 public class Main extends Application {
 
 	public static void main(String[] args) {
-		launch(args);
+            String[] params = new String[2];
+            params[0] = "-gui";
+            params[1] = "Player:bomberEscape.SMA.PlayerAgent";
+            Boot.main(params);
+            
+            launch(args);
 	}
 
 	@Override

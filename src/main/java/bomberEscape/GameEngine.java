@@ -1,8 +1,10 @@
 package bomberEscape;
 
+import bomberEscape.SMA.PlayerAgent;
 import bomberEscape.factory.GameObjectFactory;
 import bomberEscape.go.GameObject;
 import bomberEscape.go.GameObjectManager;
+import bomberEscape.go.Player;
 import bomberEscape.keyboard.KeyListener;
 import bomberEscape.keyboard.KeyLogger;
 import bomberEscape.map.MapGenerator;
@@ -10,6 +12,11 @@ import bomberEscape.map.MapParser;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import jade.core.Agent;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
+import jade.core.AID;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +32,9 @@ public abstract class GameEngine<GOFactory extends GameObjectFactory, Entity> {
 	private MapParser<Entity>		mapParser;
 	private MapGenerator<Entity>	generator;
 	private KeyLogger				keyLogger;
-
+        
+        private PlayerAgent playerAgent = new PlayerAgent();
+        
 	public GameEngine(GOFactory factory, MapParser<Entity> mapParser, MapGenerator<Entity> generator, KeyLogger keyLogger) {
 		super();
 		this.factory = factory;
@@ -34,6 +43,8 @@ public abstract class GameEngine<GOFactory extends GameObjectFactory, Entity> {
 		this.keyLogger = keyLogger;
 		buildAndSetGameLoop();
 	}
+        
+     
 
 	protected final void buildAndSetGameLoop() {
 		animationTimer = new TimerWithStatus() {
@@ -43,10 +54,12 @@ public abstract class GameEngine<GOFactory extends GameObjectFactory, Entity> {
 				updateSprites(time);
 
 				checkCollisions();
+                                
+                                sendPosition();
 
-				cleanupSprites();
-
-			}
+				cleanupSprites();                                
+                                
+                        }
 		};
 
 	}
@@ -89,7 +102,7 @@ public abstract class GameEngine<GOFactory extends GameObjectFactory, Entity> {
 	}
 
 	protected void checkCollisions() {
-		for (GameObject go1 : manager.getActors()) {
+                for (GameObject go1 : manager.getActors()) {
 			for (GameObject go2 : manager.getActors()) {
 				if (handleCollision(go1, go2)) {
 					break;
@@ -128,6 +141,14 @@ public abstract class GameEngine<GOFactory extends GameObjectFactory, Entity> {
 			gameObject.update(getGameSurface(), time);
 		}
 	}
+        
+        protected void sendPosition(){
+            for (GameObject go1 : manager.getActors()) {
+                if(go1.toString().contains("Player")){
+                    playerAgent.updatePosition(((Player) go1).position);
+                }
+            }
+        }
 
 	protected void setSceneNodes(Group sceneNodes) {
 		this.sceneNodes = sceneNodes;

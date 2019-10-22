@@ -63,5 +63,10 @@
             <version>11</version>
             <classifier>mac</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.tilab.jade</groupId>
+            <artifactId>jade</artifactId>
+            <version>4.5.0</version>
+        </dependency>
     </dependencies>
 </project>
